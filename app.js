@@ -21,6 +21,6 @@ btn.addEventListener('click', () => {
   }, 900);
 
   setTimeout(() => {
-    window.location.href = 'invitacion.html';
+    window.location.href = 'html/invitacion.html';
   }, 2100);
 });
