@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Nuestra Boda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #f7f2e9;
+      --cream-dark:  #ede5d4;
+      --parchment:   #f0e8d5;
+      --green:       #6b9470;
+      --green-light: #9cbd9f;
+      --green-dark:  #3f6645;
+      --text:        #2e2820;
+      --text-mid:    #5a4e44;
+      --text-light:  #8a7e74;
+      --gold:        #b8976a;
+      --gold-light:  #d4b48a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      color: var(--text);
+      opacity: 0;
+      animation: pageIn 1.4s 0.1s ease forwards;
+    }
+
+    @keyframes pageIn { from { opacity:0; } to { opacity:1; } }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 10dvh;
+    }
+    .hero-video {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(10,10,8,.10) 0%, rgba(10,10,8,.20) 50%, rgba(10,10,8,.72) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .hero-pre {
+      font-size: .68rem; letter-spacing: .32em; text-transform: uppercase;
+      color: rgba(255,255,255,.92); text-shadow: 0 1px 10px rgba(0,0,0,.55);
+      opacity: 0; animation: fadeUp 1s 1s forwards;
+    }
+    .hero-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 11vw, 4.2rem);
+      font-weight: 400; font-style: italic; line-height: 1.05;
+      color: #fff; text-shadow: 0 2px 28px rgba(0,0,0,.55), 0 1px 6px rgba(0,0,0,.35);
+      opacity: 0; animation: fadeUp 1s 1.2s forwards;
+    }
+    .hero-date {
+      font-size: .74rem; letter-spacing: .24em;
+      color: rgba(255,255,255,.82); text-shadow: 0 1px 8px rgba(0,0,0,.35);
+      margin-top: 6px; opacity: 0; animation: fadeUp 1s 1.45s forwards;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 7px;
+      opacity: 0; animation: fadeUp 1s 2.2s forwards;
+    }
+    .scroll-hint span { font-size: .6rem; letter-spacing: .24em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+    .scroll-line {
+      width: 1px; height: 38px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.7), transparent);
+      animation: scrollPulse 2.2s 2.4s ease-in-out infinite;
+    }
+    @keyframes scrollPulse { 0%,100%{opacity:.35;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.18)} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    .ornament {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin: 0 auto 36px; opacity: .55;
+    }
+    .ornament-line { height: 1px; width: 52px; background: linear-gradient(to right, transparent, var(--gold)); }
+    .ornament-line.r { background: linear-gradient(to left, transparent, var(--gold)); }
+    .ornament svg { width: 22px; height: 22px; }
+
+    .sw { padding: 72px 24px; max-width: 500px; margin: 0 auto; position: relative; z-index: 1; }
+    .alt-bg { background: var(--cream-dark); position: relative; }
+    .alt-bg::before, .alt-bg::after {
+      content: ''; display: block; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+      position: absolute; left: 10%; right: 10%;
+    }
+    .alt-bg::before { top: 0; }
+    .alt-bg::after  { bottom: 0; }
+
+    .section-label {
+      font-size: .62rem; letter-spacing: .32em; text-transform: uppercase;
+      color: var(--green); text-align: center; margin-bottom: 10px; display: block;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 7vw, 2.4rem);
+      font-weight: 400; font-style: italic; line-height: 1.2;
+      color: var(--text); text-align: center; margin-bottom: 28px;
+    }
+
+    .parchment {
+      background: var(--parchment); border-radius: 20px; padding: 28px 22px;
+      box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 4px 24px rgba(100,80,50,.10);
+      position: relative; overflow: hidden;
+    }
+
+    .cd-section {
+      background: var(--green-dark); padding: 64px 24px;
+      position: relative; overflow: hidden;
+    }
+    .cd-section::before {
+      content:''; position:absolute; inset:0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(107,148,112,.25) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 50%, rgba(63,102,69,.20) 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .cd-inner { max-width:500px; margin:0 auto; text-align:center; position:relative;z-index:1; }
+    .cd-section .section-label { color: var(--green-light); }
+    .cd-section .section-title { color: #f0ede6; }
+    .cd-section .ornament { opacity:.4; }
+    .cd-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 10px;
+      max-width: 360px; margin: 0 auto;
+    }
+    .cd-item {
+      text-align: center; background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 16px 8px 12px;
+    }
+    .cd-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 300; color: #fff; line-height: 1; display: block;
+    }
+    .cd-lbl {
+      font-size: .55rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--green-light); display: block; margin-top: 5px;
+    }
+
+    .fg { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+    .tile {
+      background: var(--parchment); border-radius: 18px; padding: 22px 16px; text-align: center;
+      box-shadow: 0 2px 16px rgba(100,80,50,.09), 0 1px 0 rgba(255,255,255,.8) inset;
+    }
+    .tile .ic   { font-size:1.5rem; display:block; margin-bottom:10px; }
+    .tile .lbl  { font-size:.58rem; letter-spacing:.24em; text-transform:uppercase; color:var(--green); margin-bottom:6px; display:block; }
+    .tile .val  { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--text); line-height:1.35; }
+    .tile .sub  { font-size:.76rem; color:var(--text-light); margin-top:3px; }
+    .tile-row   { display:flex; align-items:center; gap:18px; }
+    .tile-row .ic { margin-bottom:0; font-size:1.8rem; flex-shrink:0; }
+
+    .historia-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+      font-style: italic; font-weight: 300;
+      color: var(--text-mid); text-align: center; line-height: 1.85;
+      max-width: 380px; margin: 0 auto 28px;
+    }
+    .historia-quote::before { content:'\201C'; color:var(--gold); font-size:2.5rem; line-height:0; vertical-align:-.5rem; margin-right:4px; }
+    .historia-quote::after  { content:'\201D'; color:var(--gold); font-size:2.5rem; line-height:0; vertical-align:-.5rem; margin-left:4px; }
+    .firma { text-align:center; font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-style:italic; color:var(--green-dark); }
+
+    .timeline { position:relative; padding-left:28px; }
+    .timeline::before {
+      content:''; position:absolute; left:7px; top:8px; bottom:8px;
+      width:1px; background:linear-gradient(to bottom, var(--green-light), transparent);
+    }
+    .tl-item { position:relative; padding:0 0 28px 24px; }
+    .tl-item:last-child { padding-bottom:0; }
+    .tl-dot {
+      position:absolute; left:-28px; top:6px;
+      width:10px; height:10px; border-radius:50%;
+      background:var(--green); border:2px solid var(--parchment);
+      box-shadow:0 0 0 2px var(--green-light);
+    }
+    .tl-hora  { font-size:.62rem; letter-spacing:.18em; color:var(--green); text-transform:uppercase; margin-bottom:4px; display:block; }
+    .tl-ev    { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--text); font-style:italic; }
+    .tl-desc  { font-size:.78rem; color:var(--text-light); margin-top:2px; }
+
+    .dc-note {
+      font-size:.82rem; color:var(--text-light); text-align:center; line-height:1.7;
+      margin-bottom:30px; max-width:340px; margin-left:auto; margin-right:auto;
+    }
+    .dc-palette { display:flex; justify-content:center; gap:12px; margin-bottom:36px; }
+    .dc-swatch {
+      width:44px; height:44px; border-radius:50%;
+      box-shadow:0 2px 8px rgba(0,0,0,.12), 0 1px 0 rgba(255,255,255,.6) inset;
+      position:relative;
+    }
+    .dc-swatch::after {
+      content:attr(data-name); position:absolute; bottom:-20px; left:50%; transform:translateX(-50%);
+      font-size:.55rem; letter-spacing:.1em; color:var(--text-light); white-space:nowrap;
+    }
+    .dc-tags { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+    .dc-tag {
+      background:var(--parchment); border:1px solid var(--cream-dark); border-radius:50px;
+      padding:7px 16px; font-size:.73rem; color:var(--text-mid); letter-spacing:.05em;
+      box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
+    }
+    .dc-avoid { margin-top:18px; text-align:center; font-size:.72rem; color:var(--text-light); }
+    .dc-avoid strong { color:#a05050; font-weight:400; }
+
+    .map-wrap { border-radius:20px; overflow:hidden; box-shadow:0 4px 24px rgba(100,80,50,.12); }
+    .map-wrap iframe { width:100%; height:260px; border:none; display:block; }
+    .map-btn {
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      width:100%; margin-top:14px; padding:15px;
+      background:var(--green-dark); color:rgba(255,255,255,.92);
+      border-radius:50px; text-decoration:none;
+      font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+      transition:background .2s, transform .15s;
+      box-shadow:0 4px 16px rgba(63,102,69,.25);
+    }
+    .map-btn:active { background:var(--green); transform:scale(.98); }
+
+    .rsvp-bg {
+      background:var(--green-dark); padding:72px 24px 80px;
+      position:relative; overflow:hidden;
+    }
+    .rsvp-bg::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at 50% 0%, rgba(107,148,112,.30) 0%, transparent 65%);
+      pointer-events:none;
+    }
+    .rsvp-inner { max-width:500px; margin:0 auto; position:relative;z-index:1; }
+    .rsvp-bg .section-label { color:var(--green-light); }
+    .rsvp-bg .section-title { color:#f0ede6; }
+    .rsvp-note {
+      font-size:.84rem; color:rgba(240,237,230,.72); text-align:center;
+      line-height:1.75; margin-bottom:28px;
+    }
+    .rsvp-form { display:flex; flex-direction:column; gap:12px; }
+    .rsvp-input {
+      width:100%; padding:15px 20px;
+      border:1px solid rgba(255,255,255,.15); border-radius:50px;
+      background:rgba(255,255,255,.08);
+      font-family:'Jost',sans-serif; font-size:.84rem; font-weight:300; color:#f0ede6;
+      outline:none; transition:border-color .2s, background .2s; -webkit-appearance:none;
+    }
+    .rsvp-input::placeholder { color:rgba(240,237,230,.45); }
+    .rsvp-input:focus { border-color:rgba(255,255,255,.35); background:rgba(255,255,255,.12); }
+    .rsvp-toggle {
+      display:flex; background:rgba(0,0,0,.15); border-radius:50px; padding:4px; gap:4px;
+    }
+    .rsvp-toggle button {
+      flex:1; padding:11px; border:none; border-radius:50px;
+      font-family:'Jost',sans-serif; font-size:.76rem; letter-spacing:.08em; font-weight:300;
+      background:transparent; color:rgba(240,237,230,.6); cursor:pointer;
+      transition:background .2s, color .2s;
+    }
+    .rsvp-toggle button.active { background:var(--green); color:#fff; }
+    .rsvp-submit {
+      width:100%; padding:16px; background:var(--parchment);
+      color:var(--green-dark); border:none; border-radius:50px;
+      font-family:'Jost',sans-serif; font-size:.74rem; font-weight:400;
+      letter-spacing:.22em; text-transform:uppercase; cursor:pointer;
+      margin-top:4px; transition:opacity .2s, transform .15s;
+      box-shadow:0 4px 16px rgba(0,0,0,.15);
+    }
+    .rsvp-submit:active { transform:scale(.97); opacity:.88; }
+
+    footer {
+      text-align:center; padding:52px 28px 70px;
+      background:var(--cream-dark); position:relative;
+    }
+    footer::before {
+      content:''; display:block; height:1px;
+      background:linear-gradient(to right, transparent, var(--gold-light), transparent);
+      position:absolute; top:0; left:10%; right:10%;
+    }
+    .footer-names { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-style:italic; font-weight:300; color:var(--green-dark); margin-bottom:8px; }
+    .footer-date  { font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+    .footer-msg   { font-size:.76rem; color:var(--text-light); line-height:1.7; }
+
+    .toast {
+      position:fixed; bottom:32px; left:50%;
+      transform:translateX(-50%) translateY(80px);
+      background:var(--green-dark); color:#f0ede6;
+      padding:14px 28px; border-radius:50px;
+      font-size:.78rem; letter-spacing:.08em;
+      z-index:999; opacity:0;
+      transition:transform .45s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+      white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,.18);
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <video class="hero-video" src="assets/media.mp4" autoplay muted loop playsinline></video>
+  <div class="hero-content">
+    <p class="hero-pre">Los invitamos a nuestra boda</p>
+    <h1 class="hero-names">Nombre &amp; Nombre</h1>
+    <p class="hero-date">DD · MM · AAAA</p>
+  </div>
+  <div class="scroll-hint">
+  </div>
+</section>
+
+<div class="cd-section" id="fecha">
+  <div class="cd-inner">
+    <span class="section-label">Faltan</span>
+    <h2 class="section-title">Días para el gran día</h2>
+    <div class="ornament" style="opacity:.4;">
+      <div class="ornament-line"></div>
+      <svg viewBox="0 0 24 24" fill="#b8976a"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <div class="ornament-line r"></div>
+    </div>
+    <div class="cd-grid">
+      <div class="cd-item"><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">Días</span></div>
+      <div class="cd-item"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Horas</span></div>
+      <div class="cd-item"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Minutos</span></div>
+      <div class="cd-item"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Segundos</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="sw" id="detalles">
+  <span class="section-label">Detalles</span>
+  <h2 class="section-title">Fecha &amp; Lugar</h2>
+  <div class="ornament">
+    <div class="ornament-line"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#b8976a" stroke-width="1.2"><path d="M12 22s-8-5.6-8-11a8 8 0 0116 0c0 5.4-8 11-8 11z"/><circle cx="12" cy="11" r="3" fill="#b8976a" stroke="none"/></svg>
+    <div class="ornament-line r"></div>
+  </div>
+  <div class="fg">
+    <div class="tile"><span class="ic">🗓</span><span class="lbl">Fecha</span><p class="val">Sábado<br>DD de Mes<br>AAAA</p></div>
+    <div class="tile"><span class="ic">🕔</span><span class="lbl">Hora</span><p class="val">4:00 PM<br>Ceremonia</p></div>
+  </div>
+  <div class="tile tile-row">
+    <span class="ic">🌿</span>
+    <div><span class="lbl">Lugar</span><p class="val">Nombre del Salón</p><p class="sub">Dirección completa, Ciudad</p></div>
+  </div>
+</div>
+
+<div class="alt-bg" id="historia">
+  <div class="sw" style="padding-top:64px;padding-bottom:64px;">
+    <span class="section-label">Nuestra historia</span>
+    <h2 class="section-title">Un amor que merece celebrarse</h2>
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <svg viewBox="0 0 24 24" fill="#b8976a"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <div class="ornament-line r"></div>
+    </div>
+    <p class="historia-quote">Desde el primer momento supimos que éramos el uno para el otro. Hoy queremos compartir este nuevo capítulo con las personas que más amamos.</p>
+    <p class="firma">— Nombre &amp; Nombre</p>
+  </div>
+</div>
+
+<div class="sw" id="itinerario">
+  <span class="section-label">El gran día</span>
+  <h2 class="section-title">Itinerario</h2>
+  <div class="ornament">
+    <div class="ornament-line"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#b8976a" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    <div class="ornament-line r"></div>
+  </div>
+  <div class="parchment">
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><span class="tl-hora">4:00 PM</span><p class="tl-ev">Ceremonia</p><p class="tl-desc">Capilla / Jardín de la hacienda</p></div>
+      <div class="tl-item"><div class="tl-dot"></div><span class="tl-hora">5:00 PM</span><p class="tl-ev">Cóctel de bienvenida</p><p class="tl-desc">Terraza principal</p></div>
+      <div class="tl-item"><div class="tl-dot"></div><span class="tl-hora">7:00 PM</span><p class="tl-ev">Recepción &amp; Cena</p><p class="tl-desc">Salón de banquetes</p></div>
+      <div class="tl-item"><div class="tl-dot"></div><span class="tl-hora">9:00 PM</span><p class="tl-ev">Fiesta &amp; Baile</p><p class="tl-desc">Hasta que el cuerpo aguante 🎶</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="alt-bg" id="dresscode">
+  <div class="sw" style="padding-top:64px;padding-bottom:64px;">
+    <span class="section-label">Vestimenta</span>
+    <h2 class="section-title">Dress Code</h2>
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#b8976a" stroke-width="1.2"><path d="M12 2L8 7H5l2 4-3 9h16l-3-9 2-4h-3L12 2z"/></svg>
+      <div class="ornament-line r"></div>
+    </div>
+    <p class="dc-note">Nos encantaría que te vistieras en armonía con la paleta de nuestra boda. Etiqueta formal.</p>
+    <div class="dc-palette" style="padding-bottom:28px;">
+      <div class="dc-swatch" style="background:#e8e0cf;" data-name="Crema"></div>
+      <div class="dc-swatch" style="background:#9cbd9f;" data-name="Sage"></div>
+      <div class="dc-swatch" style="background:#c4b49a;" data-name="Arena"></div>
+      <div class="dc-swatch" style="background:#8aaa8d;" data-name="Verde"></div>
+      <div class="dc-swatch" style="background:#d4c4b0;" data-name="Lino"></div>
+    </div>
+    <div class="dc-tags">
+      <span class="dc-tag">Vestido largo</span>
+      <span class="dc-tag">Traje formal</span>
+      <span class="dc-tag">Tonos tierra</span>
+      <span class="dc-tag">Verde sage</span>
+      <span class="dc-tag">Beige &amp; crema</span>
+      <span class="dc-tag">Nude &amp; arena</span>
+    </div>
+    <p class="dc-avoid">Por favor evitar <strong>blanco, negro puro y rojo</strong></p>
+  </div>
+</div>
+
+<div class="sw" id="ubicacion">
+  <span class="section-label">¿Cómo llegar?</span>
+  <h2 class="section-title">Ubicación</h2>
+  <div class="ornament">
+    <div class="ornament-line"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#b8976a" stroke-width="1.2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+    <div class="ornament-line r"></div>
+  </div>
+  <div class="map-wrap">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.8!2d-76.5!3d3.45!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwMjcnMDAuMCJOIDc2wrAzMCcwMC4wIlc!5e0!3m2!1ses!2sco!4v1" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <a class="map-btn" href="https://maps.google.com/?q=Nombre+del+Salon,+Ciudad" target="_blank">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+    Abrir en Google Maps
+  </a>
+</div>
+
+<div class="rsvp-bg" id="rsvp">
+  <div class="rsvp-inner">
+    <span class="section-label">Confirmación</span>
+    <h2 class="section-title">¿Nos acompañas?</h2>
+    <div class="ornament" style="opacity:.4;">
+      <div class="ornament-line"></div>
+      <svg viewBox="0 0 24 24" fill="#b8976a"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <div class="ornament-line r"></div>
+    </div>
+    <p class="rsvp-note">Por favor confirma tu asistencia antes del <strong style="color:rgba(240,237,230,.92);">DD de Mes</strong>.<br>Tu presencia es el mejor regalo.</p>
+    <div class="rsvp-form">
+      <input class="rsvp-input" type="text"   id="rsvp-name"   placeholder="Tu nombre completo" />
+      <input class="rsvp-input" type="number" id="rsvp-guests" placeholder="N.º de acompañantes" min="0" max="5" />
+      <input class="rsvp-input" type="text"   id="rsvp-food"   placeholder="Restricciones alimentarias (opcional)" />
+      <div class="rsvp-toggle">
+        <button class="active" id="btn-si" onclick="toggleRsvp('si')">✓ &nbsp;Asistiré con alegría</button>
+        <button id="btn-no" onclick="toggleRsvp('no')">✗ &nbsp;No podré ir</button>
+      </div>
+      <button class="rsvp-submit" onclick="submitRsvp()">Confirmar asistencia</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ornament" style="margin-bottom:24px;">
+    <div class="ornament-line"></div>
+    <svg viewBox="0 0 24 24" fill="#b8976a" width="22" height="22"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    <div class="ornament-line r"></div>
+  </div>
+  <p class="footer-names">Nombre &amp; Nombre</p>
+  <p class="footer-date">DD · MM · AAAA</p>
+  <p class="footer-msg">Con amor y gratitud por ser parte de este momento.<br>Os esperamos con los brazos abiertos.</p>
+</footer>
+
+<div class="toast" id="toast">¡Gracias! Te esperamos 🌿</div>
+<audio id="bg-audio" src="assets/audio.mp3" loop preload="auto"></audio>
+
+<script>
+  (function(){
+    const a = document.getElementById('bg-audio');
+    a.volume = 0;
+    function start(){
+      const t = sessionStorage.getItem('audioTime');
+      if(t) a.currentTime = parseFloat(t);
+      a.play().then(()=>{ let v=0; const r=setInterval(()=>{ v=Math.min(v+.05,.35); a.volume=v; if(v>=.35)clearInterval(r); },50); }).catch(()=>{});
+    }
+    a.play().then(()=>{ const t=sessionStorage.getItem('audioTime'); if(t) a.currentTime=parseFloat(t); a.volume=.35; }).catch(()=>{
+      document.addEventListener('touchstart',start,{once:true});
+      document.addEventListener('click',start,{once:true});
+    });
+    window.addEventListener('beforeunload',()=>{ sessionStorage.setItem('audioTime',a.currentTime); });
+  })();
+
+  const wDate = new Date('2025-12-20T16:00:00');
+  function tick(){
+    const diff = wDate - new Date();
+    if(diff<=0){ ['cd-d','cd-h','cd-m','cd-s'].forEach(id=>document.getElementById(id).textContent='00'); return; }
+    const pad = n => String(Math.floor(n)).padStart(2,'0');
+    document.getElementById('cd-d').textContent = pad(diff/86400000);
+    document.getElementById('cd-h').textContent = pad((diff%86400000)/3600000);
+    document.getElementById('cd-m').textContent = pad((diff%3600000)/60000);
+    document.getElementById('cd-s').textContent = pad((diff%60000)/1000);
+  }
+  tick(); setInterval(tick,1000);
+
+  let choice='si';
+  function toggleRsvp(c){
+    choice=c;
+    document.getElementById('btn-si').classList.toggle('active',c==='si');
+    document.getElementById('btn-no').classList.toggle('active',c==='no');
+    document.getElementById('toast').textContent = c==='no' ? '¡Te echaremos de menos! 🌸' : '¡Gracias! Te esperamos 🌿';
+  }
+  function submitRsvp(){
+    if(!document.getElementById('rsvp-name').value.trim()){ document.getElementById('rsvp-name').focus(); return; }
+    const t=document.getElementById('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3400);
+  }
+
+  setTimeout(()=>{ document.getElementById('fecha').scrollIntoView({behavior:'smooth'}); },5000);
+
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; obs.unobserve(e.target); } });
+  },{threshold:.10});
+  document.querySelectorAll('.sw, .alt-bg').forEach(el=>{
+    el.style.opacity='0'; el.style.transform='translateY(28px)';
+    el.style.transition='opacity .9s ease, transform .9s ease';
+    obs.observe(el);
+  });
+</script>
+</body>
+</html>

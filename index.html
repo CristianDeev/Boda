@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Invitación</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="envelope-container">
+    <img class="carta-bg" src="assets/carta.png" alt="carta" />
+    <div class="flap-shadow"></div>
+    <button class="sello-btn" id="selloBtn" aria-label="Abrir invitación">
+      <img class="sello-img" src="assets/sello.png" alt="sello" />
+      <span class="ripple-ring"></span>
+    </button>
+  </div>
+
+  <audio id="bg-audio" src="assets/audio.mp3" loop preload="auto"></audio>
+
+  <script>
+    (function() {
+      const audio = document.getElementById('bg-audio');
+      audio.volume = 0;
+
+      function startAudio() {
+        const saved = sessionStorage.getItem('audioTime');
+        if (saved) audio.currentTime = parseFloat(saved);
+        audio.play().then(() => {
+          let vol = 0;
+          const ramp = setInterval(() => {
+            vol = Math.min(vol + 0.03, 0.35);
+            audio.volume = vol;
+            if (vol >= 0.35) clearInterval(ramp);
+          }, 80);
+        }).catch(() => {});
+      }
+
+      document.addEventListener('touchstart', startAudio, { once: true });
+      document.addEventListener('click',      startAudio, { once: true });
+
+      window.addEventListener('beforeunload', () => {
+        sessionStorage.setItem('audioTime', audio.currentTime);
+      });
+    })();
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

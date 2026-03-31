@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --cream: #f5f0e8;
+  --rose: #8b1a2e;
+  --rose-light: #c2415a;
+  --shadow: rgba(80, 20, 30, 0.18);
+  --text: #5a3a3a;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+.envelope-container {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.carta-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.envelope-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(180, 140, 110, 0.12) 100%);
+  pointer-events: none;
+}
+
+.flap-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  background: linear-gradient(
+    to bottom,
+    rgba(160, 120, 90, 0.10) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sello-btn {
+  position: relative;
+  z-index: 10;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  width: min(52vw, 220px);
+  height: min(52vw, 220px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 8px 24px rgba(139, 26, 46, 0.40))
+          drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.18s ease;
+  animation: selloEntrance 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes selloEntrance {
+  0%   { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  60%  { opacity: 1; transform: scale(1.06) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.sello-btn:hover {
+  transform: scale(1.06);
+  filter: drop-shadow(0 12px 32px rgba(139, 26, 46, 0.55))
+          drop-shadow(0 4px 10px rgba(0,0,0,0.22));
+}
+
+.sello-btn:active {
+  transform: scale(0.93);
+  filter: drop-shadow(0 4px 12px rgba(139, 26, 46, 0.35))
+          drop-shadow(0 1px 4px rgba(0,0,0,0.15));
+  transition: transform 0.08s ease, filter 0.08s ease;
+}
+
+.sello-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  display: block;
+}
+
+.ripple-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(194, 65, 90, 0.55);
+  animation: pulseRing 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulseRing {
+  0%   { transform: scale(0.92); opacity: 0.7; }
+  60%  { transform: scale(1.18); opacity: 0; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
+
+.sello-btn::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(194, 65, 90, 0.30);
+  animation: pulseRing 2.4s ease-out 0.8s infinite;
+  pointer-events: none;
+}
+
+.hint-text {
+  position: relative;
+  z-index: 10;
+  margin-top: 22px;
+  font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  opacity: 0.75;
+  animation: fadeUp 1.6s 0.9s both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 0.75; transform: translateY(0); }
+}
+
+.sello-btn.burst .ripple-ring {
+  animation: burstRing 0.5s ease-out forwards;
+}
+
+@keyframes burstRing {
+  0%   { transform: scale(1);   opacity: 1; border-color: rgba(194, 65, 90, 0.9); }
+  100% { transform: scale(1.9); opacity: 0; border-color: rgba(194, 65, 90, 0);   }
+}
+
+.envelope-container.opening .carta-bg {
+  animation: envelopeLift 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+@keyframes envelopeLift {
+  0%   { transform: translateY(0);   }
+  100% { transform: translateY(-6%); }
+}
+
+.envelope-container.opening .sello-btn {
+  animation: selloLift 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+@keyframes selloLift {
+  0%   { transform: translateY(0);    }
+  100% { transform: translateY(-14%); }
+}
+
+.envelope-container.opening .hint-text {
+  animation: fadeOut 0.3s ease forwards;
+}
+@keyframes fadeOut {
+  to { opacity: 0; }
+}
